@@ -59,6 +59,10 @@ namespace Neblina.Api.Migrations
 
                     b.Property<int>("DestinationBankId");
 
+                    b.Property<int>("SourceAccountId");
+
+                    b.Property<int>("SourceBankId");
+
                     b.Property<int>("Status");
 
                     b.Property<int>("Type");

@@ -7,9 +7,10 @@ namespace Neblina.Api.Core.Models
 {
     public enum TransactionType
     {
-        InternalRealTime,
-        ExternalRealTime,
-        InternalScheduled,
-        ExternalScheduled
+        SameAccount,
+        SameBankRealTime,
+        AnotherBankRealTime,
+        SameBankScheduled,
+        AnotherBankScheduled
     }
 }
