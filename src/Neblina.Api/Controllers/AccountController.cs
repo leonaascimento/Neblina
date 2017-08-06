@@ -4,27 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Neblina.Api.Persistence;
 using Neblina.Api.Models;
 using Microsoft.Extensions.Logging;
+using Neblina.Api.Core;
 
 namespace Neblina.Api.Controllers
 {
     [Route("accounts")]
     public class AccountController : Controller
     {
-        private BankingContext _context;
+        private IUnitOfWork _repos;
 
-        public AccountController(BankingContext context)
+        public AccountController(IUnitOfWork repos)
         {
-            _context = context;
+            _repos = repos;
         }
 
         // GET accounts
         [HttpGet]
         public IActionResult Get()
         {
-            var accounts = _context.Accounts.ToList();
+            var accounts = _repos.Accounts.GetAll();
 
             return Ok(accounts);
         }
@@ -33,7 +33,7 @@ namespace Neblina.Api.Controllers
         [HttpGet("{id}")]
         public IActionResult Get(int id)
         {
-            var account = _context.Accounts.Find(id);
+            var account = _repos.Accounts.Get(id);
 
             return Ok(account);
         }
@@ -45,8 +45,8 @@ namespace Neblina.Api.Controllers
             if (!ModelState.IsValid)
                 return BadRequest();
 
-            _context.Accounts.Add(account);
-            _context.SaveChanges();
+            _repos.Accounts.Add(account);
+            _repos.SaveAndApply();
 
             return Ok();
         }
@@ -55,13 +55,13 @@ namespace Neblina.Api.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var account = _context.Accounts.Find(id);
+            var account = _repos.Accounts.Get(id);
 
             if (account == null)
                 return NotFound();
 
-            _context.Accounts.Remove(account);
-            _context.SaveChanges();
+            _repos.Accounts.Remove(account);
+            _repos.SaveAndApply();
 
             return Ok();
         }
