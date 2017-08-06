@@ -4,9 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Neblina.Api.Models;
 using Microsoft.Extensions.Logging;
 using Neblina.Api.Core;
+using Neblina.Api.Core.Models;
 
 namespace Neblina.Api.Controllers
 {

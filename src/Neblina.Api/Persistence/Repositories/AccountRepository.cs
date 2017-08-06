@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Neblina.Api.Core.Models;
 using Neblina.Api.Core.Repositories;
-using Neblina.Api.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

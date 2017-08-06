@@ -1,4 +1,4 @@
-﻿using Neblina.Api.Models;
+﻿using Neblina.Api.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
