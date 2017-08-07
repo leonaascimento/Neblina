@@ -12,12 +12,15 @@ namespace Neblina.Api.Persistence
     {
         private readonly BankingContext _context;
 
-        public IAccountRepository Accounts { get; private set; }
+        private IAccountRepository _accounts;
+        private ITransactionRepository _transactions;
+
+        public IAccountRepository Accounts => _accounts ?? (_accounts = new AccountRepository(_context));
+        public ITransactionRepository Transactions => _transactions ?? (_transactions = new TransactionRepository(_context));
 
         public UnitOfWork(BankingContext context)
         {
             _context = context;
-            Accounts = new AccountRepository(context);
         }
 
         public void SaveAndApply()
