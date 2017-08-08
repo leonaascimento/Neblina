@@ -23,8 +23,22 @@ namespace Neblina.Api.Controllers
 
         // POST transfers/send
         [HttpPost("send")]
-        public IActionResult Send(TransactionType type, [FromBody]SendTransferViewModel transfer)
+        public IActionResult Send(string bank, bool scheduled, [FromBody]SendTransferViewModel transfer)
         {
+            TransactionType type;
+
+            switch (bank)
+            {
+                case "same":
+                    type = scheduled ? TransactionType.SameBankScheduled : TransactionType.SameBankRealTime;
+                    break;
+                case "another":
+                    type = scheduled ? TransactionType.AnotherBankScheduled : TransactionType.AnotherBankRealTime;
+                    break;
+                default:
+                    return NotFound();
+            }
+
             var transaction = new Transaction()
             {
                 Date = DateTime.Now,
