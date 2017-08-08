@@ -41,7 +41,7 @@ namespace Neblina.Api.Controllers
             var receipt = new WithdrawalReceiptViewModel()
             {
                 TransactionId = transaction.TransactionId,
-                Amount = transaction.Amount * -1
+                Amount = transaction.Amount
             };
 
             return Ok(receipt);
