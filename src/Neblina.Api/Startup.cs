@@ -34,6 +34,7 @@ namespace Neblina.Api
             services.AddDbContext<Persistence.BankingContext>(
                 options => options.UseSqlite("Data Source=banking.db"));
 
+            services.AddCors();
             services.AddMvc();
 
             // Add application services.
@@ -45,6 +46,10 @@ namespace Neblina.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader());
 
             app.UseMvc();
         }
