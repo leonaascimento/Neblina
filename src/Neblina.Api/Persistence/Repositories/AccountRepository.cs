@@ -19,11 +19,37 @@ namespace Neblina.Api.Persistence.Repositories
 
         public Account GetAccountWithCustomerAndTransactions(int id)
         {
-            return BankingContext.Accounts
+            var account = BankingContext.Accounts
                 .Include(p => p.Customer)
-                .Include(p => p.Transactions)
                 .Where(p => p.AccountId == id)
-                .Single();
+                .AsNoTracking()
+                .SingleOrDefault();
+
+            if (account != null)
+                account.Transactions = BankingContext.Transactions
+                    .OrderByDescending(p => p.Date)
+                    .AsNoTracking()
+                    .ToList();
+
+            return account;
+        }
+
+        public Account GetAccountWithCustomerAndTransactionsFromDate(int id, DateTime start)
+        {
+            var account = BankingContext.Accounts
+                .Include(p => p.Customer)
+                .Where(p => p.AccountId == id)
+                .AsNoTracking()
+                .SingleOrDefault();
+
+            if (account != null)
+                account.Transactions = BankingContext.Transactions
+                    .Where(p => p.Date >= start)
+                    .OrderByDescending(p => p.Date)
+                    .AsNoTracking()
+                    .ToList();
+
+            return account;
         }
 
         public override void Remove(Account entity)

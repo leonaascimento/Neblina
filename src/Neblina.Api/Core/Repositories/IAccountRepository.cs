@@ -9,5 +9,6 @@ namespace Neblina.Api.Core.Repositories
     public interface IAccountRepository : IRepository<Account>
     {
         Account GetAccountWithCustomerAndTransactions(int id);
+        Account GetAccountWithCustomerAndTransactionsFromDate(int id, DateTime start);
     }
 }

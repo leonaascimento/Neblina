@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Neblina.Api.Core;
 using Neblina.Api.Models.StatementViewModels;
+using Neblina.Api.Core.Models;
 
 namespace Neblina.Api.Controllers
 {
@@ -22,9 +23,14 @@ namespace Neblina.Api.Controllers
 
         // GET: statement
         [HttpGet]
-        public IActionResult Get()
+        public IActionResult Get(DateTime? from)
         {
-            var account = _repos.Accounts.GetAccountWithCustomerAndTransactions(_accountId);
+            Account account;
+
+            if (from.HasValue)
+                account = _repos.Accounts.GetAccountWithCustomerAndTransactionsFromDate(_accountId, from.Value);
+            else
+                account = _repos.Accounts.GetAccountWithCustomerAndTransactions(_accountId);
 
             var statement = new StatementViewModel()
             {
