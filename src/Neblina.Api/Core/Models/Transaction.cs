@@ -12,7 +12,9 @@ namespace Neblina.Api.Core.Models
         public int SourceAccountId { get; set; }
         public int DestinationBankId { get; set; }
         public int DestinationAccountId { get; set; }
+        public string Description { get; set; }
         public decimal Amount { get; set; }
+        public DateTime Date { get; set; }
         public TransactionType Type { get; set; }
         public TransactionStatus Status { get; set; }
         

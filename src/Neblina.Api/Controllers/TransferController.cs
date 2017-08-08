@@ -27,6 +27,8 @@ namespace Neblina.Api.Controllers
         {
             var transaction = new Transaction()
             {
+                Date = DateTime.Now,
+                Description = "Transfer sent",
                 AccountId = _accountId,
                 DestinationBankId = transfer.DestinationBankId,
                 DestinationAccountId = transfer.DestinationAccountId,

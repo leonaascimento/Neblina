@@ -27,9 +27,9 @@ namespace Neblina.Api.Migrations
                 {
                     AccountId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    Balance = table.Column<decimal>(nullable: false),
                     CustomerId = table.Column<int>(nullable: false),
-                    Enabled = table.Column<bool>(nullable: false),
-                    Total = table.Column<decimal>(nullable: false)
+                    Enabled = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -50,8 +50,12 @@ namespace Neblina.Api.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     AccountId = table.Column<int>(nullable: false),
                     Amount = table.Column<decimal>(nullable: false),
+                    Date = table.Column<DateTime>(nullable: false),
+                    Description = table.Column<string>(nullable: true),
                     DestinationAccountId = table.Column<int>(nullable: false),
                     DestinationBankId = table.Column<int>(nullable: false),
+                    SourceAccountId = table.Column<int>(nullable: false),
+                    SourceBankId = table.Column<int>(nullable: false),
                     Status = table.Column<int>(nullable: false),
                     Type = table.Column<int>(nullable: false)
                 },

@@ -28,9 +28,11 @@ namespace Neblina.Api.Controllers
             var transaction = new Transaction()
             {
                 AccountId = _accountId,
+                Date = DateTime.Now,
+                Description = "Deposit",
                 Amount = deposit.Amount,
                 Type = TransactionType.SameAccount,
-                Status = TransactionStatus.Pending
+                Status = TransactionStatus.Pending,
             };
 
             _repos.Transactions.Add(transaction);

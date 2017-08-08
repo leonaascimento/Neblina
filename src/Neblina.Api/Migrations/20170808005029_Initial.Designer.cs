@@ -9,7 +9,7 @@ using Neblina.Api.Core.Models;
 namespace Neblina.Api.Migrations
 {
     [DbContext(typeof(BankingContext))]
-    [Migration("20170804235028_Initial")]
+    [Migration("20170808005029_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,11 +22,11 @@ namespace Neblina.Api.Migrations
                     b.Property<int>("AccountId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<decimal>("Balance");
+
                     b.Property<int>("CustomerId");
 
                     b.Property<bool>("Enabled");
-
-                    b.Property<decimal>("Total");
 
                     b.HasKey("AccountId");
 
@@ -56,9 +56,17 @@ namespace Neblina.Api.Migrations
 
                     b.Property<decimal>("Amount");
 
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description");
+
                     b.Property<int>("DestinationAccountId");
 
                     b.Property<int>("DestinationBankId");
+
+                    b.Property<int>("SourceAccountId");
+
+                    b.Property<int>("SourceBankId");
 
                     b.Property<int>("Status");
 

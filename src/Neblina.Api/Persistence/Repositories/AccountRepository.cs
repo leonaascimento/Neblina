@@ -17,6 +17,15 @@ namespace Neblina.Api.Persistence.Repositories
         {
         }
 
+        public Account GetAccountWithCustomerAndTransactions(int id)
+        {
+            return BankingContext.Accounts
+                .Include(p => p.Customer)
+                .Include(p => p.Transactions)
+                .Where(p => p.AccountId == id)
+                .Single();
+        }
+
         public override void Remove(Account entity)
         {
             BankingContext.Entry(entity).State = EntityState.Modified;

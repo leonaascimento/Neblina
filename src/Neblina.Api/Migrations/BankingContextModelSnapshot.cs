@@ -21,11 +21,11 @@ namespace Neblina.Api.Migrations
                     b.Property<int>("AccountId")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<decimal>("Balance");
+
                     b.Property<int>("CustomerId");
 
                     b.Property<bool>("Enabled");
-
-                    b.Property<decimal>("Total");
 
                     b.HasKey("AccountId");
 
@@ -54,6 +54,10 @@ namespace Neblina.Api.Migrations
                     b.Property<int>("AccountId");
 
                     b.Property<decimal>("Amount");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<string>("Description");
 
                     b.Property<int>("DestinationAccountId");
 

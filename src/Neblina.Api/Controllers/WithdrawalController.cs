@@ -27,6 +27,8 @@ namespace Neblina.Api.Controllers
         {
             var transaction = new Transaction()
             {
+                Date = DateTime.Now,
+                Description = "Withdrawal",
                 AccountId = _accountId,
                 Amount = withdrawal.Amount * -1,
                 Type = TransactionType.SameAccount,

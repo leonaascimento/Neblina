@@ -20,23 +20,32 @@ namespace Neblina.Api.Controllers
             _accountId = 1;
         }
 
-        // GET: balance
+        // GET: statement
         [HttpGet]
         public IActionResult Get()
         {
-            var transactions = _repos.Transactions.GetAll(_accountId);
-            var balance = new List<StatementItemViewModel>();
+            var account = _repos.Accounts.GetAccountWithCustomerAndTransactions(_accountId);
 
-            foreach (var transaction in transactions)
-                balance.Add(new StatementItemViewModel()
+            var statement = new StatementViewModel()
+            {
+                AccountId = account.AccountId,
+                CustomerName = account.Customer.Name,
+                Balance = account.Balance
+            };
+
+            foreach (var transaction in account.Transactions)
+                statement.Transactions.Add(new TransactionViewModel()
                 {
                     TransactionId = transaction.TransactionId,
-                    Amount = transaction.Amount,
+                    Date = transaction.Date,
+                    Description = transaction.Description,
+                    Credit = transaction.Amount > 0 ? transaction.Amount as decimal? : null,
+                    Debit = transaction.Amount < 0 ? transaction.Amount as decimal? : null,
                     Type = transaction.Type,
                     Status = transaction.Status
                 });
 
-            return Ok(balance);
+            return Ok(statement);
         }
     }
 }

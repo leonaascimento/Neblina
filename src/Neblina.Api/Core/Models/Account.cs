@@ -8,7 +8,7 @@ namespace Neblina.Api.Core.Models
     public class Account
     {
         public int AccountId { get; set; }
-        public decimal Total { get; set; }
+        public decimal Balance { get; set; }
         public bool Enabled { get; set; }
 
         public int CustomerId { get; set; }
