@@ -10,6 +10,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Neblina.Api.Persistence;
 using Neblina.Api.Core;
+using Neblina.Api.Core.Commands;
+using Neblina.Api.Commands;
 
 namespace Neblina.Api
 {
@@ -39,7 +41,9 @@ namespace Neblina.Api
 
             // Add application services.
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddSingleton<ITransactionDispatcher, TransactionDispatcher>();
+            services.AddTransient<IDepositCommand, DepositCommand>();
+            services.AddTransient<IWithdrawalCommand, WithdrawalCommand>();
+            services.AddTransient<ITransferCommand, TransferCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

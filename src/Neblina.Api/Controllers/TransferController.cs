@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Neblina.Api.Core;
 using Neblina.Api.Models.TransferViewModels;
 using Neblina.Api.Core.Models;
+using Neblina.Api.Core.Commands;
 
 namespace Neblina.Api.Controllers
 {
@@ -13,11 +14,13 @@ namespace Neblina.Api.Controllers
     public class TransferController : Controller
     {
         private IUnitOfWork _repos;
+        private ITransferCommand _command;
         private int _accountId;
 
-        public TransferController(IUnitOfWork repos)
+        public TransferController(IUnitOfWork repos, ITransferCommand command)
         {
             _repos = repos;
+            _command = command;
             _accountId = 1;
         }
 
@@ -56,6 +59,8 @@ namespace Neblina.Api.Controllers
 
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
+
+            _command.Enqueue(transaction.TransactionId);
 
             var receipt = new SendTransferReceiptViewModel()
             {

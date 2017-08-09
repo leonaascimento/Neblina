@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Neblina.Api.Models.WithdrawalViewModels;
 using Neblina.Api.Core.Models;
 using Neblina.Api.Core;
+using Neblina.Api.Core.Commands;
 
 namespace Neblina.Api.Controllers
 {
@@ -13,13 +14,13 @@ namespace Neblina.Api.Controllers
     public class WithdrawalController : Controller
     {
         private readonly IUnitOfWork _repos;
-        private readonly ITransactionDispatcher _dispatcher;
+        private readonly IWithdrawalCommand _command;
         private int _accountId;
 
-        public WithdrawalController(IUnitOfWork repos, ITransactionDispatcher dispatcher)
+        public WithdrawalController(IUnitOfWork repos, IWithdrawalCommand command)
         {
             _repos = repos;
-            _dispatcher = dispatcher;
+            _command = command;
             _accountId = 1;
         }
 
@@ -40,7 +41,7 @@ namespace Neblina.Api.Controllers
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
 
-            _dispatcher.Execute(transaction.TransactionId);
+            _command.Execute(transaction.TransactionId);
 
             var receipt = new WithdrawalReceiptViewModel()
             {
