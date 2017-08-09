@@ -54,7 +54,8 @@ namespace Neblina.Api
 
             app.UseCors(builder =>
                 builder.AllowAnyOrigin()
-                       .AllowAnyHeader());
+                       .AllowAnyHeader()
+                       .AllowAnyMethod());
 
             app.UseMvc();
         }
