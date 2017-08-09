@@ -15,14 +15,16 @@ namespace Neblina.Binder.Api.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
 
-            modelBuilder.Entity("Neblina.Binder.Api.Models.Bank", b =>
+            modelBuilder.Entity("Neblina.Binder.Api.Core.Models.Bank", b =>
                 {
-                    b.Property<int>("BankId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("BankId");
 
-                    b.Property<string>("BaseUrl");
+                    b.Property<string>("Name")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("ReceiveUrl");
+
+                    b.Property<string>("StatusUrl");
 
                     b.HasKey("BankId");
 

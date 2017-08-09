@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Neblina.Binder.Api.Migrations
 {
-    public partial class Initial : Migration
+    public partial class Initital : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,10 +12,10 @@ namespace Neblina.Binder.Api.Migrations
                 name: "Banks",
                 columns: table => new
                 {
-                    BankId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BaseUrl = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true)
+                    BankId = table.Column<int>(nullable: false),
+                    Name = table.Column<string>(maxLength: 100, nullable: true),
+                    ReceiveUrl = table.Column<string>(nullable: true),
+                    StatusUrl = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
