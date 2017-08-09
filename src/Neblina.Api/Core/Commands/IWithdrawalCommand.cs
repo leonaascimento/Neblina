@@ -7,6 +7,6 @@ namespace Neblina.Api.Core.Commands
 {
     public interface IWithdrawalCommand
     {
-        void Execute(int id);
+        void Execute(int id, int tries = 3, int waitInterval = 100);
     }
 }
