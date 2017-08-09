@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Neblina.Api.Commands
 {
-    public class TransferCommand : ITransferCommand
+    public class SendTransferCommand : ISendTransferCommand
     {
         private readonly ConnectionFactory _factory;
 
-        public TransferCommand(ConnectionFactory factory)
+        public SendTransferCommand(ConnectionFactory factory)
         {
             _factory = factory;
         }

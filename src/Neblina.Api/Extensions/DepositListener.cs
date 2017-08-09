@@ -12,12 +12,12 @@ using Neblina.Api.Core.Models;
 
 namespace Neblina.Api.Extensions
 {
-    public class RabbitListener
+    public class DepositListener
     {
         private readonly ConnectionFactory _factory;
         private readonly BankingContext _context;
 
-        public RabbitListener(ConnectionFactory factory, BankingContext context)
+        public DepositListener(ConnectionFactory factory, BankingContext context)
         {
             _context = context;
             _factory = factory;
@@ -56,15 +56,8 @@ namespace Neblina.Api.Extensions
                                 // TODO: 
                             }
                         }
-
-                        Console.WriteLine(" [x] Received {0}", message);
                     };
-                    channel.BasicConsume(queue: "deposits",
-                                         autoAck: true,
-                                         consumer: consumer);
-
-                    Console.WriteLine(" Press [enter] to exit.");
-                    Console.ReadLine();
+                    channel.BasicConsume(queue: "deposits", autoAck: true, consumer: consumer);
                 }
             }
         }

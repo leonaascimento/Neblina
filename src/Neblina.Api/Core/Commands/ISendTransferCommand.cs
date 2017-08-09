@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Neblina.Api.Core.Commands
 {
-    public interface ITransferCommand
+    public interface ISendTransferCommand
     {
         void Enqueue(int id);
     }

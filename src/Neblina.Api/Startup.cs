@@ -47,11 +47,11 @@ namespace Neblina.Api
             {
                 return new ConnectionFactory() { HostName = "localhost" };
             });
-            services.AddSingleton<RabbitListener, RabbitListener>();
+            services.AddSingleton<DepositListener, DepositListener>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IDepositCommand, DepositCommand>();
             services.AddTransient<IWithdrawalCommand, WithdrawalCommand>();
-            services.AddTransient<ITransferCommand, TransferCommand>();
+            services.AddTransient<ISendTransferCommand, SendTransferCommand>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

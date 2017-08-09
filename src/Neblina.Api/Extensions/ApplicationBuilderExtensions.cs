@@ -10,11 +10,11 @@ namespace Neblina.Api.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static RabbitListener Listener { get; set; }
+        public static DepositListener Listener { get; set; }
 
         public static IApplicationBuilder UseRabbitListener(this IApplicationBuilder app)
         {
-            Listener = app.ApplicationServices.GetService<RabbitListener>();
+            Listener = app.ApplicationServices.GetService<DepositListener>();
 
             var life = app.ApplicationServices.GetService<IApplicationLifetime>();
 
