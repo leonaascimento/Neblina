@@ -32,7 +32,7 @@ namespace Neblina.Api.Controllers
                 Description = "Deposit",
                 Amount = deposit.Amount,
                 Type = TransactionType.SameAccount,
-                Status = TransactionStatus.Pending,
+                Status = TransactionStatus.Authorized,
             };
 
             _repos.Transactions.Add(transaction);
