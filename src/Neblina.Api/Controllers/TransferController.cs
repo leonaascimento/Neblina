@@ -27,6 +27,9 @@ namespace Neblina.Api.Controllers
         {
             TransactionType type;
 
+            if (scheduled)
+                return BadRequest(new { message = "Only real-time transactions are supported at the moment." });
+
             switch (bank)
             {
                 case "same":
