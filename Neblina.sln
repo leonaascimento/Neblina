@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neblina.Api", "src\Neblina.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neblina.Binder.Api", "src\Neblina.Binder.Api\Neblina.Binder.Api.csproj", "{2CB7CF21-BEFA-435E-B2C5-20D0B4BE410B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neblina.Transactions.Service", "src\Neblina.Transactions.Service\Neblina.Transactions.Service.csproj", "{91A508C0-D235-46B8-836C-F6A20E67803D}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -43,18 +41,6 @@ Global
 		{2CB7CF21-BEFA-435E-B2C5-20D0B4BE410B}.Release|x64.Build.0 = Release|Any CPU
 		{2CB7CF21-BEFA-435E-B2C5-20D0B4BE410B}.Release|x86.ActiveCfg = Release|Any CPU
 		{2CB7CF21-BEFA-435E-B2C5-20D0B4BE410B}.Release|x86.Build.0 = Release|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Debug|x64.Build.0 = Debug|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Debug|x86.Build.0 = Debug|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Release|x64.ActiveCfg = Release|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Release|x64.Build.0 = Release|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Release|x86.ActiveCfg = Release|Any CPU
-		{91A508C0-D235-46B8-836C-F6A20E67803D}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

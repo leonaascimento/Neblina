@@ -14,6 +14,7 @@ using Neblina.Api.Core.Commands;
 using Neblina.Api.Commands;
 using Neblina.Api.Persistence.Commands;
 using RabbitMQ.Client;
+using Neblina.Api.Extensions;
 
 namespace Neblina.Api
 {
@@ -46,6 +47,7 @@ namespace Neblina.Api
             {
                 return new ConnectionFactory() { HostName = "localhost" };
             });
+            services.AddSingleton<RabbitListener, RabbitListener>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IDepositCommand, DepositCommand>();
             services.AddTransient<IWithdrawalCommand, WithdrawalCommand>();
@@ -61,6 +63,8 @@ namespace Neblina.Api
             app.UseCors(builder =>
                 builder.AllowAnyOrigin()
                        .AllowAnyHeader());
+
+            app.UseRabbitListener();
 
             app.UseMvc();
         }
