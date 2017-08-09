@@ -39,6 +39,7 @@ namespace Neblina.Api
 
             // Add application services.
             services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddSingleton<ITransactionDispatcher, TransactionDispatcher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

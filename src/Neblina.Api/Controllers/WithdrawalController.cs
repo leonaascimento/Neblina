@@ -13,11 +13,13 @@ namespace Neblina.Api.Controllers
     public class WithdrawalController : Controller
     {
         private readonly IUnitOfWork _repos;
+        private readonly ITransactionDispatcher _dispatcher;
         private int _accountId;
 
-        public WithdrawalController(IUnitOfWork repos)
+        public WithdrawalController(IUnitOfWork repos, ITransactionDispatcher dispatcher)
         {
             _repos = repos;
+            _dispatcher = dispatcher;
             _accountId = 1;
         }
 
@@ -37,6 +39,8 @@ namespace Neblina.Api.Controllers
 
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
+
+            _dispatcher.Execute(transaction.TransactionId);
 
             var receipt = new WithdrawalReceiptViewModel()
             {
