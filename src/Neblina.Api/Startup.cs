@@ -12,6 +12,9 @@ using Neblina.Api.Persistence;
 using Neblina.Api.Core;
 using Neblina.Api.Core.Commands;
 using Neblina.Api.Commands;
+using Neblina.Api.Persistence.Commands;
+using RabbitMQ.Client;
+using Neblina.Api.Extensions;
 
 namespace Neblina.Api
 {
@@ -33,13 +36,18 @@ namespace Neblina.Api
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
-            services.AddDbContext<Persistence.BankingContext>(
+            services.AddDbContext<BankingContext>(
                 options => options.UseSqlite("Data Source=banking.db"));
 
             services.AddCors();
             services.AddMvc();
 
             // Add application services.
+            services.AddSingleton<ConnectionFactory, ConnectionFactory>(factory =>
+            {
+                return new ConnectionFactory() { HostName = "localhost" };
+            });
+            services.AddSingleton<RabbitListener, RabbitListener>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<IDepositCommand, DepositCommand>();
             services.AddTransient<IWithdrawalCommand, WithdrawalCommand>();
@@ -56,6 +64,8 @@ namespace Neblina.Api
                 builder.AllowAnyOrigin()
                        .AllowAnyHeader()
                        .AllowAnyMethod());
+
+            app.UseRabbitListener();
 
             app.UseMvc();
         }

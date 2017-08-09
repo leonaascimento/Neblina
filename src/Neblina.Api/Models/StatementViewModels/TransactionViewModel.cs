@@ -1,4 +1,6 @@
 ﻿using Neblina.Api.Core.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +15,9 @@ namespace Neblina.Api.Models.StatementViewModels
         public string Description { get; set; }
         public decimal? Credit { get; set; }
         public decimal? Debit { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public TransactionType Type { get; set; }
+        [JsonConverter(typeof(StringEnumConverter))]
         public TransactionStatus Status { get; set; }
     }
 }
