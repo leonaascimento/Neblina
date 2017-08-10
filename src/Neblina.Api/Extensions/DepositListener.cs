@@ -58,6 +58,10 @@ namespace Neblina.Api.Extensions
                         }
                     };
                     channel.BasicConsume(queue: "deposits", autoAck: true, consumer: consumer);
+
+                    Console.WriteLine(" Press [enter] to exit.");
+
+                    Console.ReadLine();
                 }
             }
         }
