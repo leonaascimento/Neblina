@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Data;
 using Neblina.Api.Core.Models;
 using Neblina.Api.Core.Commands;
+using Neblina.Api.Core.Communicators;
 
 namespace Neblina.Api.Listeners
 {
@@ -17,12 +18,14 @@ namespace Neblina.Api.Listeners
     {
         private readonly ConnectionFactory _factory;
         private readonly ITransferCommand _transferCommand;
+        private readonly ITransferCommunicator _transferCommunicator;
         private IConnection _connection;
         private IModel _channel;
 
-        public TransferListener(ConnectionFactory factory, ITransferCommand transferCommand)
+        public TransferListener(ConnectionFactory factory, ITransferCommand transferCommand, ITransferCommunicator transferCommunicator)
         {
             _transferCommand = transferCommand;
+            _transferCommunicator = transferCommunicator;
             _factory = factory;
         }
 
@@ -41,7 +44,12 @@ namespace Neblina.Api.Listeners
 
                 await Task.Run(() =>
                 {
-                    _transferCommand.Execute(int.Parse(message));
+                    var id = int.Parse(message);
+
+                    _transferCommand.Execute(id);
+                    var result = _transferCommunicator.Execute(id);
+
+                    // TODO escrever apply ou rollback
                 });
             };
             _channel.BasicConsume(queue: "transfers", autoAck: true, consumer: consumer);
