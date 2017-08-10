@@ -49,6 +49,10 @@ namespace Neblina.Api.Controllers
                 Amount = transaction.Amount
             };
 
+            var processed = _repos.Transactions.Get(transaction.TransactionId);
+            if (processed.Status != TransactionStatus.Successful)
+                return BadRequest(receipt);            
+
             return Ok(receipt);
         }
     }
