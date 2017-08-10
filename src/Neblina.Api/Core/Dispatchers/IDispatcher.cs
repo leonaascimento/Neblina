@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Neblina.Api.Core.Commands
+namespace Neblina.Api.Core.Dispatchers
 {
-    public interface ISendTransferCommand
+    public interface IDispatcher
     {
         void Enqueue(int id);
     }

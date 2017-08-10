@@ -1,4 +1,5 @@
 ﻿using Neblina.Api.Core.Commands;
+using Neblina.Api.Core.Dispatchers;
 using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
@@ -6,13 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neblina.Api.Commands
+namespace Neblina.Api.Dispatchers
 {
-    public class SendTransferCommand : ISendTransferCommand
+    public class TransferDispatcher : ITransferDispatcher
     {
         private readonly ConnectionFactory _factory;
 
-        public SendTransferCommand(ConnectionFactory factory)
+        public TransferDispatcher(ConnectionFactory factory)
         {
             _factory = factory;
         }

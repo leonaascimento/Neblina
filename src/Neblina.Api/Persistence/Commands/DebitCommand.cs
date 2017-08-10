@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Neblina.Api.Persistence.Commands
 {
-    public class WithdrawalCommand : IWithdrawalCommand
+    public class DebitCommand : IDebitCommand
     {
         private readonly BankingContext _context;
 
-        public WithdrawalCommand(BankingContext context)
+        public DebitCommand(BankingContext context)
         {
             _context = context;
         }

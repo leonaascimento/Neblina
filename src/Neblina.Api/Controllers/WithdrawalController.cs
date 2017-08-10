@@ -14,10 +14,10 @@ namespace Neblina.Api.Controllers
     public class WithdrawalController : Controller
     {
         private readonly IUnitOfWork _repos;
-        private readonly IWithdrawalCommand _command;
+        private readonly IDebitCommand _command;
         private int _accountId;
 
-        public WithdrawalController(IUnitOfWork repos, IWithdrawalCommand command)
+        public WithdrawalController(IUnitOfWork repos, IDebitCommand command)
         {
             _repos = repos;
             _command = command;

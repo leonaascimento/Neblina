@@ -9,8 +9,6 @@ namespace Neblina.Api.Core.Models
     {
         SameAccount,
         SameBankRealTime,
-        AnotherBankRealTime,
-        SameBankScheduled,
-        AnotherBankScheduled
+        AnotherBankRealTime
     }
 }

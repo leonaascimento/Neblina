@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Neblina.Api.Listeners;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,11 +11,13 @@ namespace Neblina.Api.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static DepositListener Listener { get; set; }
+        public static DepositListener DepositListener { get; set; }
+        public static TransferListener TransferListener { get; set; }
 
         public static IApplicationBuilder UseRabbitListener(this IApplicationBuilder app)
         {
-            Listener = app.ApplicationServices.GetService<DepositListener>();
+            DepositListener = app.ApplicationServices.GetService<DepositListener>();
+            TransferListener = app.ApplicationServices.GetService<TransferListener>();
 
             var life = app.ApplicationServices.GetService<IApplicationLifetime>();
 
@@ -28,7 +31,8 @@ namespace Neblina.Api.Extensions
 
         private static void OnStarted()
         {
-            Listener.Run();
+            DepositListener.Run();
+            TransferListener.Run();
         }
 
         private static void OnStopping()

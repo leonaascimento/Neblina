@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 
 namespace Neblina.Api.Persistence.Commands
 {
-    public class ReceiveTransferCommand : IReceiveTransferCommand
+    public class TransferCommand : ITransferCommand
     {
         private readonly BankingContext _context;
 
-        public ReceiveTransferCommand(BankingContext context)
+        public TransferCommand(BankingContext context)
         {
             _context = context;
         }
@@ -36,8 +36,14 @@ namespace Neblina.Api.Persistence.Commands
                             throw new ArgumentException();
 
                         var account = _context.Accounts.Find(transaction.AccountId);
-                        account.Balance += transaction.Amount;
-                        transaction.Status = TransactionStatus.Successful;
+
+                        if (account.Balance >= Math.Abs(transaction.Amount))
+                        {
+                            account.Balance += transaction.Amount;
+                            transaction.Status = TransactionStatus.Authorized;
+                        }
+                        else
+                            transaction.Status = TransactionStatus.Denied;
 
                         _context.SaveChanges();
                         contextTransaction.Commit();

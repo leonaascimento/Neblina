@@ -9,17 +9,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data;
 using Neblina.Api.Core.Models;
+using Neblina.Api.Core.Commands;
 
-namespace Neblina.Api.Extensions
+namespace Neblina.Api.Listeners
 {
     public class DepositListener
     {
         private readonly ConnectionFactory _factory;
-        private readonly BankingContext _context;
+        private readonly ICreditCommand _creditCommand;
 
-        public DepositListener(ConnectionFactory factory, BankingContext context)
+        public DepositListener(ConnectionFactory factory, ICreditCommand creditCommand)
         {
-            _context = context;
+            _creditCommand = creditCommand;
             _factory = factory;
         }
 
@@ -39,25 +40,7 @@ namespace Neblina.Api.Extensions
 
                         await Task.Run(() =>
                         {
-                            using (var t = _context.Database.BeginTransaction(IsolationLevel.Serializable))
-                            {
-                                try
-                                {
-                                    var transaction = _context.Transactions.Find(int.Parse(message));
-                                    var account = _context.Accounts.Find(transaction.AccountId);
-
-                                    account.Balance += transaction.Amount;
-                                    transaction.Status = TransactionStatus.Successful;
-
-                                    _context.SaveChanges();
-
-                                    t.Commit();
-                                }
-                                catch
-                                {
-                                    // TODO: 
-                                }
-                            }
+                            _creditCommand.Execute(int.Parse(message));
                         });
                     };
                     channel.BasicConsume(queue: "deposits", autoAck: true, consumer: consumer);
