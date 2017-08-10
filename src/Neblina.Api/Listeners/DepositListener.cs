@@ -17,6 +17,8 @@ namespace Neblina.Api.Listeners
     {
         private readonly ConnectionFactory _factory;
         private readonly ICreditCommand _creditCommand;
+        private IConnection _connection;
+        private IModel _channel;
 
         public DepositListener(ConnectionFactory factory, ICreditCommand creditCommand)
         {
@@ -24,30 +26,31 @@ namespace Neblina.Api.Listeners
             _factory = factory;
         }
 
-        public void Run()
+        public void Register()
         {
-            using (var connection = _factory.CreateConnection())
+            _connection = _factory.CreateConnection();
+            _channel = _connection.CreateModel();
+
+            _channel.QueueDeclare(queue: "deposits", durable: false, exclusive: false, autoDelete: false, arguments: null);
+
+            var consumer = new AsyncEventingBasicConsumer(_channel);
+            consumer.Received += async (model, ea) =>
             {
-                using (var channel = connection.CreateModel())
+                var body = ea.Body;
+                var message = Encoding.UTF8.GetString(body);
+
+                await Task.Run(() =>
                 {
-                    channel.QueueDeclare(queue: "deposits", durable: false, exclusive: false, autoDelete: false, arguments: null);
+                    _creditCommand.Execute(int.Parse(message));
+                });
+            };
+            _channel.BasicConsume(queue: "deposits", autoAck: true, consumer: consumer);
+        }
 
-                    var consumer = new AsyncEventingBasicConsumer(channel);
-                    consumer.Received += async (model, ea) =>
-                    {
-                        var body = ea.Body;
-                        var message = Encoding.UTF8.GetString(body);
-
-                        await Task.Run(() =>
-                        {
-                            _creditCommand.Execute(int.Parse(message));
-                        });
-                    };
-                    channel.BasicConsume(queue: "deposits", autoAck: true, consumer: consumer);
-
-                    Console.ReadLine();
-                }
-            }
+        public void Deregister()
+        {
+            _channel.Dispose();
+            _connection.Dispose();
         }
     }
 }

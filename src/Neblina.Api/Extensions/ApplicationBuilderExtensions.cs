@@ -31,13 +31,14 @@ namespace Neblina.Api.Extensions
 
         private static void OnStarted()
         {
-            DepositListener.Run();
-            TransferListener.Run();
+            DepositListener.Register();
+            TransferListener.Register();
         }
 
         private static void OnStopping()
         {
-
+            DepositListener.Deregister();
+            TransferListener.Deregister();
         }
     }
 }

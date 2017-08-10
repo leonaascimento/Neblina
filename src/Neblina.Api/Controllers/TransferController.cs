@@ -80,7 +80,7 @@ namespace Neblina.Api.Controllers
                 AccountId = _accountId,
                 DestinationBankId = transfer.SourceBankId,
                 DestinationAccountId = transfer.SourceAccountId,
-                Amount = transfer.Amount * -1,
+                Amount = transfer.Amount,
                 Type = type.Value,
                 Status = TransactionStatus.Pending
             };
