@@ -45,7 +45,7 @@ namespace Neblina.Api
             // Add application services.
             services.AddSingleton<ConnectionFactory, ConnectionFactory>(factory =>
             {
-                return new ConnectionFactory() { HostName = "localhost" };
+                return new ConnectionFactory() { HostName = "localhost", DispatchConsumersAsync = true };
             });
             services.AddSingleton<DepositListener, DepositListener>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
