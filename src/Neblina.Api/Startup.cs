@@ -56,6 +56,7 @@ namespace Neblina.Api
             services.AddSingleton<TransferListener, TransferListener>();
             services.AddSingleton<BankCache, BankCache>();
             services.AddSingleton<HttpClient, HttpClient>();
+            services.AddSingleton<RegisterBank, RegisterBank>();
             services.AddSingleton<ITransferCommunicator, TransferCommunicator>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ICreditCommand, CreditCommand>();
@@ -77,6 +78,7 @@ namespace Neblina.Api
                        .AllowAnyMethod());
 
             app.UseRabbitListener();
+            app.UseAutoconfig();
 
             app.UseMvc();
         }
