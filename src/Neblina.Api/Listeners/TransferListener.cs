@@ -46,10 +46,17 @@ namespace Neblina.Api.Listeners
                 {
                     var id = int.Parse(message);
 
-                    _transferCommand.Execute(id);
-                    var result = _transferCommunicator.Execute(id);
+                    var next = _transferCommand.Execute(id);
 
-                    // TODO escrever apply ou rollback
+                    if (next)
+                    {
+                        next = _transferCommunicator.Execute(id);
+
+                        if (next)
+                            _transferCommand.Continue(id);
+                        else
+                            _transferCommand.Rollback(id);
+                    }
                 });
             };
             _channel.BasicConsume(queue: "transfers", autoAck: true, consumer: consumer);

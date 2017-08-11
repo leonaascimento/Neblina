@@ -18,6 +18,8 @@ using Neblina.Api.Core.Dispatchers;
 using Neblina.Api.Dispatchers;
 using Neblina.Api.Listeners;
 using System.Net.Http;
+using Neblina.Api.Core.Communicators;
+using Neblina.Api.Communicators;
 
 namespace Neblina.Api
 {
@@ -52,7 +54,9 @@ namespace Neblina.Api
             });
             services.AddSingleton<DepositListener, DepositListener>();
             services.AddSingleton<TransferListener, TransferListener>();
+            services.AddSingleton<BankCache, BankCache>();
             services.AddSingleton<HttpClient, HttpClient>();
+            services.AddSingleton<ITransferCommunicator, TransferCommunicator>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ICreditCommand, CreditCommand>();
             services.AddTransient<IDebitCommand, DebitCommand>();

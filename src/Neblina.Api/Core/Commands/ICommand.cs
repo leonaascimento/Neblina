@@ -7,6 +7,6 @@ namespace Neblina.Api.Core.Commands
 {
     public interface ICommand
     {
-        void Execute(int id, int tries = 3, int waitInterval = 100);
+        bool Execute(int id, int tries = 3, int waitInterval = 100);
     }
 }

@@ -6,18 +6,30 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Net;
+using Neblina.Api.Core.Communicators;
+using Neblina.Api.Core.Models;
+using Neblina.Api.Core;
 
 namespace Neblina.Api.Communicators
 {
-    public class TransferCommunicator
+    public class TransferCommunicator : ITransferCommunicator
     {
+        private readonly IUnitOfWork _repos;
         private HttpClient _client;
         private BankCache _cache;
 
-        public TransferCommunicator(HttpClient client, BankCache cache)
+        public TransferCommunicator(HttpClient client, BankCache cache, IUnitOfWork repos)
         {
+            _repos = repos;
             _client = client;
             _cache = cache;
+        }
+
+        public bool Execute(int id, int tries = 3, int waitInterval = 100)
+        {
+            var transaction = _repos.Transactions.Get(id);
+
+            return true;
         }
 
         public async Task<bool> SendToDestination(int bankId)

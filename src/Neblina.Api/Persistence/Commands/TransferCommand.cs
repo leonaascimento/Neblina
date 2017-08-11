@@ -20,8 +20,46 @@ namespace Neblina.Api.Persistence.Commands
             _context = context;
         }
 
-        public void Execute(int id, int tries = 3, int waitInterval = 100)
+        public bool Continue(int id, int tries = 3, int waitInterval = 100)
         {
+            var next = false;
+            var succeeded = false;
+
+            do
+            {
+                using (var contextTransaction = _context.Database.BeginTransaction(IsolationLevel.Serializable))
+                {
+                    try
+                    {
+                        var transaction = _context.Transactions.Find(id);
+
+                        if (transaction == null)
+                            throw new ArgumentException();
+
+                        transaction.Status = TransactionStatus.Successful;
+                        next = true;
+
+                        _context.SaveChanges();
+                        contextTransaction.Commit();
+
+                        succeeded = true;
+                    }
+                    catch
+                    {
+                        if (--tries <= 0)
+                            throw;
+                        else
+                            Thread.Sleep(waitInterval);
+                    }
+                }
+            } while (!succeeded);
+
+            return next;
+        }
+
+        public bool Execute(int id, int tries = 3, int waitInterval = 100)
+        {
+            var next = false;
             var succeeded = false;
 
             do
@@ -41,6 +79,7 @@ namespace Neblina.Api.Persistence.Commands
                         {
                             account.Balance += transaction.Amount;
                             transaction.Status = TransactionStatus.Authorized;
+                            next = true;
                         }
                         else
                             transaction.Status = TransactionStatus.Denied;
@@ -59,6 +98,48 @@ namespace Neblina.Api.Persistence.Commands
                     }
                 }
             } while (!succeeded);
+
+            return next;
+        }
+
+        public bool Rollback(int id, int tries = 3, int waitInterval = 100)
+        {
+            var next = false;
+            var succeeded = false;
+
+            do
+            {
+                using (var contextTransaction = _context.Database.BeginTransaction(IsolationLevel.Serializable))
+                {
+                    try
+                    {
+                        var transaction = _context.Transactions.Find(id);
+
+                        if (transaction == null)
+                            throw new ArgumentException();
+
+                        var account = _context.Accounts.Find(transaction.AccountId);
+
+                        account.Balance -= transaction.Amount;
+                        transaction.Status = TransactionStatus.Failed;
+                        next = true;
+
+                        _context.SaveChanges();
+                        contextTransaction.Commit();
+
+                        succeeded = true;
+                    }
+                    catch
+                    {
+                        if (--tries <= 0)
+                            throw;
+                        else
+                            Thread.Sleep(waitInterval);
+                    }
+                }
+            } while (!succeeded);
+
+            return next;
         }
     }
 }

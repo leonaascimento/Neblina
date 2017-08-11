@@ -19,8 +19,9 @@ namespace Neblina.Api.Persistence.Commands
             _context = context;
         }
 
-        public void Execute(int id, int tries = 3, int waitInterval = 100)
+        public bool Execute(int id, int tries = 3, int waitInterval = 100)
         {
+            var next = false;
             var succeeded = false;
 
             do
@@ -37,6 +38,7 @@ namespace Neblina.Api.Persistence.Commands
                         var account = _context.Accounts.Find(transaction.AccountId);
                         account.Balance += transaction.Amount;
                         transaction.Status = TransactionStatus.Successful;
+                        next = true;
 
                         _context.SaveChanges();
                         contextTransaction.Commit();
@@ -52,6 +54,8 @@ namespace Neblina.Api.Persistence.Commands
                     }
                 }
             } while (!succeeded);
+
+            return next;
         }
     }
 }
