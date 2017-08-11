@@ -23,7 +23,7 @@ namespace Neblina.Api.Controllers
         private ILogger _logger;
         private int _accountId;
 
-        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command, RegisterBank registration, ILogger logger)
+        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command, RegisterBank registration, ILogger<TransferController> logger)
         {
             _repos = repos;
             _dispatcher = dispatcher;

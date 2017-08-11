@@ -18,7 +18,7 @@ namespace Neblina.Binder.Api.Controllers
         private IBankStatusService _bankStatus;
         private ILogger _logger;
 
-        public BankController(IUnitOfWork repos, IBankStatusService bankStatus, ILogger logger)
+        public BankController(IUnitOfWork repos, IBankStatusService bankStatus, ILogger<BankController> logger)
         {
             _repos = repos;
             _bankStatus = bankStatus;
