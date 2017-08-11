@@ -36,6 +36,8 @@ namespace Neblina.Binder.Api
             services.AddDbContext<Persistence.BinderContext>(
                 options => options.UseSqlite("Data Source=binder.db"));
 
+            services.AddCors();
+
             services.AddMvc();
 
             // Add application services.
@@ -48,6 +50,11 @@ namespace Neblina.Binder.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod());
 
             app.UseMvc();
         }

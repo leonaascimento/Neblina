@@ -8,6 +8,8 @@ using System.Text;
 using System.Net;
 using Neblina.Api.Core.Communicators;
 using Neblina.Api.Core.Models;
+using Newtonsoft.Json;
+using System.Runtime.Serialization.Json;
 using Neblina.Api.Core;
 
 namespace Neblina.Api.Communicators
@@ -29,10 +31,10 @@ namespace Neblina.Api.Communicators
         {
             var transaction = _repos.Transactions.Get(id);
 
-            return true;
+            return SendToDestination(transaction.DestinationBankId, transaction);
         }
 
-        public async Task<bool> SendToDestination(int bankId)
+        public bool SendToDestination(int bankId, Transaction transaction)
         {
             BankCacheEntry entry;
 
@@ -43,16 +45,21 @@ namespace Neblina.Api.Communicators
                 _client.DefaultRequestHeaders.Accept.Clear();
                 _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
-                var res = await _client.GetStringAsync($"http://localhost:52203/banks/{bankId}");
-
                 // TODO: serializar resultado da entry
+
+                var res = _client.GetAsync($"http://localhost:52203/banks/{bankId}").Result;
+                var stream = res.Content.ReadAsStreamAsync().Result;
+                var serializer = new DataContractJsonSerializer(typeof(BankCacheEntry));
+                entry = (BankCacheEntry)serializer.ReadObject(stream);
+
+                _cache.Add(entry);
             }
 
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var response = await _client.PostAsync(entry.ReceiveUrl, new StringContent(Newtonsoft.Json.JsonConvert.SerializeObject("objeto"), Encoding.UTF8, "application/json"));
+            var response = _client.PostAsync(entry.ReceiveUrl, new StringContent(JsonConvert.SerializeObject(transaction), Encoding.UTF8, "application/json")).Result;
 
-            return true;
+            return response.IsSuccessStatusCode;
         }
     }
 }
