@@ -38,7 +38,7 @@ namespace Neblina.Api.Communicators
 
             var next = false;
 
-            if (transaction.DestinationBankId == 0)
+            if (transaction.Type == TransactionType.SameBankRealTime)
             {
                 _repos.Transactions.Add(new Transaction()
                 {
