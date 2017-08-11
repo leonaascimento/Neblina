@@ -47,7 +47,11 @@ namespace Neblina.Binder.Api.Controllers
             var bank = _repos.Banks.Get(id);
 
             if (!_bankStatus.ServerIsRunning(bank.StatusUrl))
+            {
+                _repos.Banks.Remove(bank);
+                _repos.SaveAndApply();
                 return NotFound();
+            }
 
             return Ok(bank);
         }

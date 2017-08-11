@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 namespace Neblina.Api.Core.Commands
 {
-    public interface IDepositCommand
+    public interface ICommand
     {
-        void Enqueue(int id);
+        void Execute(int id, int tries = 3, int waitInterval = 100);
     }
 }

@@ -11,10 +11,13 @@ using Microsoft.Extensions.Logging;
 using Neblina.Api.Persistence;
 using Neblina.Api.Core;
 using Neblina.Api.Core.Commands;
-using Neblina.Api.Commands;
 using Neblina.Api.Persistence.Commands;
 using RabbitMQ.Client;
 using Neblina.Api.Extensions;
+using Neblina.Api.Core.Dispatchers;
+using Neblina.Api.Dispatchers;
+using Neblina.Api.Listeners;
+using System.Net.Http;
 
 namespace Neblina.Api
 {
@@ -45,13 +48,17 @@ namespace Neblina.Api
             // Add application services.
             services.AddSingleton<ConnectionFactory, ConnectionFactory>(factory =>
             {
-                return new ConnectionFactory() { HostName = "localhost" };
+                return new ConnectionFactory() { HostName = "localhost", DispatchConsumersAsync = true };
             });
             services.AddSingleton<DepositListener, DepositListener>();
+            services.AddSingleton<TransferListener, TransferListener>();
+            services.AddSingleton<HttpClient, HttpClient>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
-            services.AddTransient<IDepositCommand, DepositCommand>();
-            services.AddTransient<IWithdrawalCommand, WithdrawalCommand>();
-            services.AddTransient<ISendTransferCommand, SendTransferCommand>();
+            services.AddTransient<ICreditCommand, CreditCommand>();
+            services.AddTransient<IDebitCommand, DebitCommand>();
+            services.AddTransient<ITransferCommand, TransferCommand>();
+            services.AddTransient<ITransferDispatcher, TransferDispatcher>();
+            services.AddTransient<IDepositDispatcher, DepositDispatcher>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

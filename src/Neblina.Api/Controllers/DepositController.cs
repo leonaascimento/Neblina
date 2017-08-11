@@ -7,6 +7,7 @@ using Neblina.Api.Models.DepositViewModels;
 using Neblina.Api.Core.Models;
 using Neblina.Api.Core;
 using Neblina.Api.Core.Commands;
+using Neblina.Api.Core.Dispatchers;
 
 namespace Neblina.Api.Controllers
 {
@@ -14,13 +15,13 @@ namespace Neblina.Api.Controllers
     public class DepositController : Controller
     {
         private readonly IUnitOfWork _repos;
-        private readonly IDepositCommand _command;
+        private readonly IDepositDispatcher _dispatcher;
         private int _accountId;
 
-        public DepositController(IUnitOfWork repos, IDepositCommand command)
+        public DepositController(IUnitOfWork repos, IDepositDispatcher dispatcher)
         {
             _repos = repos;
-            _command = command;
+            _dispatcher = dispatcher;
             _accountId = 1;
         }
 
@@ -41,7 +42,7 @@ namespace Neblina.Api.Controllers
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
 
-            _command.Enqueue(transaction.TransactionId);
+            _dispatcher.Enqueue(transaction.TransactionId);
 
             var receipt = new DepositReceiptViewModel()
             {

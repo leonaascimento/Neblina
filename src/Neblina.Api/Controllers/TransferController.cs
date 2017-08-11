@@ -7,45 +7,34 @@ using Neblina.Api.Core;
 using Neblina.Api.Models.TransferViewModels;
 using Neblina.Api.Core.Models;
 using Neblina.Api.Core.Commands;
+using Neblina.Api.Core.Dispatchers;
 
 namespace Neblina.Api.Controllers
 {
     [Route("transfers")]
     public class TransferController : Controller
     {
-        private IUnitOfWork _repos;
-        private ISendTransferCommand _sendCommand;
-        private IReceiveTransferCommand _receiveCommand;
+        private readonly IUnitOfWork _repos;
+        private readonly ITransferDispatcher _dispatcher;
+        private readonly ICreditCommand _command;
         private int _accountId;
 
-        public TransferController(IUnitOfWork repos, ISendTransferCommand sendCommand, IReceiveTransferCommand receiveCommand)
+        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command)
         {
             _repos = repos;
-            _sendCommand = sendCommand;
-            _receiveCommand = receiveCommand;
+            _dispatcher = dispatcher;
+            _command = command;
             _accountId = 1;
         }
 
         // POST transfers/send
         [HttpPost("send")]
-        public IActionResult Send(string bank, bool scheduled, [FromBody]SendTransferViewModel transfer)
+        public IActionResult Send(string bank, [FromBody]SendTransferViewModel transfer)
         {
-            TransactionType type;
+            var type = GetType(bank);
 
-            if (scheduled)
-                return BadRequest(new { message = "Only real-time transactions are supported at the moment." });
-
-            switch (bank)
-            {
-                case "same":
-                    type = scheduled ? TransactionType.SameBankScheduled : TransactionType.SameBankRealTime;
-                    break;
-                case "another":
-                    type = scheduled ? TransactionType.AnotherBankScheduled : TransactionType.AnotherBankRealTime;
-                    break;
-                default:
-                    return NotFound();
-            }
+            if (!type.HasValue)
+                return NotFound();
 
             var transaction = new Transaction()
             {
@@ -55,14 +44,14 @@ namespace Neblina.Api.Controllers
                 DestinationBankId = transfer.DestinationBankId,
                 DestinationAccountId = transfer.DestinationAccountId,
                 Amount = transfer.Amount * -1,
-                Type = type,
+                Type = type.Value,
                 Status = TransactionStatus.Pending
             };
 
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
 
-            _sendCommand.Enqueue(transaction.TransactionId);
+            _dispatcher.Enqueue(transaction.TransactionId);
 
             var receipt = new SendTransferReceiptViewModel()
             {
@@ -79,22 +68,10 @@ namespace Neblina.Api.Controllers
         [HttpPost("receive")]
         public IActionResult Receive(string bank, bool scheduled, [FromBody]ReceiveTransferViewModel transfer)
         {
-            TransactionType type;
+            var type = GetType(bank);
 
-            if (scheduled)
-                return BadRequest(new { message = "Only real-time transactions are supported at the moment." });
-
-            switch (bank)
-            {
-                case "same":
-                    type = scheduled ? TransactionType.SameBankScheduled : TransactionType.SameBankRealTime;
-                    break;
-                case "another":
-                    type = scheduled ? TransactionType.AnotherBankScheduled : TransactionType.AnotherBankRealTime;
-                    break;
-                default:
-                    return NotFound();
-            }
+            if (!type.HasValue)
+                return NotFound();
 
             var transaction = new Transaction()
             {
@@ -103,15 +80,15 @@ namespace Neblina.Api.Controllers
                 AccountId = _accountId,
                 DestinationBankId = transfer.SourceBankId,
                 DestinationAccountId = transfer.SourceAccountId,
-                Amount = transfer.Amount * -1,
-                Type = type,
+                Amount = transfer.Amount,
+                Type = type.Value,
                 Status = TransactionStatus.Pending
             };
 
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
 
-            _receiveCommand.Execute(transaction.TransactionId);
+            _command.Execute(transaction.TransactionId);
 
             var receipt = new ReceiveTransferReceiptViewModel()
             {
@@ -122,6 +99,19 @@ namespace Neblina.Api.Controllers
             };
 
             return Ok(receipt);
+        }
+
+        private TransactionType? GetType(string value)
+        {
+            switch (value)
+            {
+                case "same":
+                    return TransactionType.SameBankRealTime;
+                case "another":
+                    return TransactionType.AnotherBankRealTime;
+                default:
+                    return null;
+            }
         }
     }
 }

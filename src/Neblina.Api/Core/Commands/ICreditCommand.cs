@@ -5,8 +5,7 @@ using System.Threading.Tasks;
 
 namespace Neblina.Api.Core.Commands
 {
-    public interface IWithdrawalCommand
+    public interface ICreditCommand : ICommand
     {
-        void Execute(int id, int tries = 3, int waitInterval = 100);
     }
 }
