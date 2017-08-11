@@ -16,20 +16,21 @@ namespace Neblina.Api.Communicators
 
         public void Add(BankCacheEntry entry)
         {
-            _cache.Add(entry.BankId, entry);
+            _cache.Add(entry.bankId, entry);
         }
 
         public bool TryGetValue(int id, out BankCacheEntry value)
         {
             var found = _cache.TryGetValue(id, out value);
 
-            if (value.Old)
+            if (found && value.Old)
             {
                 found = false;
+                value = null;
                 _cache.Remove(id);
             }
 
-            return false;
+            return found;
         }
 
     }

@@ -41,7 +41,7 @@ namespace Neblina.Binder.Api.Controllers
         }
 
         // GET banks/retry/5
-        [HttpGet("{id}")]
+        [HttpGet("retry/{id}")]
         public IActionResult Retry(int id)
         {
             var bank = _repos.Banks.Get(id);

@@ -14,10 +14,10 @@ namespace Neblina.Api.Communicators
             _inserted = DateTime.Now;
         }
 
-        public int BankId { get; set; }
-        public string Name { get; set; }
-        public string ReceiveUrl { get; set; }
-        public string StatusUrl { get; set; }
+        public int bankId { get; set; }
+        public string name { get; set; }
+        public string receiveUrl { get; set; }
+        public string statusUrl { get; set; }
         public bool Old => (DateTime.Now - _inserted) > TimeSpan.FromMinutes(3);
 
     }
