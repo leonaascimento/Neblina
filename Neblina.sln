@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neblina.Api", "src\Neblina.Api\Neblina.Api.csproj", "{71A81FAF-30F1-4BF2-A827-83D3017920D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neblina.Api", "src\Neblina.Api\Neblina.Api.csproj", "{71A81FAF-30F1-4BF2-A827-83D3017920D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neblina.Binder.Api", "src\Neblina.Binder.Api\Neblina.Binder.Api.csproj", "{2CB7CF21-BEFA-435E-B2C5-20D0B4BE410B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Neblina.Binder.Api", "src\Neblina.Binder.Api\Neblina.Binder.Api.csproj", "{2CB7CF21-BEFA-435E-B2C5-20D0B4BE410B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

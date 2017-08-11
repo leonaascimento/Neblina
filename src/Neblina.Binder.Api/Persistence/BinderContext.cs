@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Neblina.Binder.Api.Models;
+using Neblina.Binder.Api.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

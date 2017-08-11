@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Neblina.Binder.Api.Core.Services;
+using Neblina.Binder.Api.Services;
+using Neblina.Binder.Api.Core;
+using Neblina.Binder.Api.Persistence;
 
 namespace Neblina.Binder.Api
 {
@@ -32,9 +36,13 @@ namespace Neblina.Binder.Api
             services.AddDbContext<Persistence.BinderContext>(
                 options => options.UseSqlite("Data Source=binder.db"));
 
+            services.AddCors();
+
             services.AddMvc();
 
             // Add application services.
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IBankStatusService, BankStatusService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,6 +50,11 @@ namespace Neblina.Binder.Api
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
+
+            app.UseCors(builder =>
+                builder.AllowAnyOrigin()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod());
 
             app.UseMvc();
         }

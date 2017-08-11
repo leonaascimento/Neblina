@@ -8,22 +8,24 @@ using Neblina.Binder.Api.Persistence;
 namespace Neblina.Binder.Api.Migrations
 {
     [DbContext(typeof(BinderContext))]
-    [Migration("20170805013551_Initial")]
-    partial class Initial
+    [Migration("20170809140721_Initital")]
+    partial class Initital
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.1.2");
 
-            modelBuilder.Entity("Neblina.Binder.Api.Models.Bank", b =>
+            modelBuilder.Entity("Neblina.Binder.Api.Core.Models.Bank", b =>
                 {
-                    b.Property<int>("BankId")
-                        .ValueGeneratedOnAdd();
+                    b.Property<int>("BankId");
 
-                    b.Property<string>("BaseUrl");
+                    b.Property<string>("Name")
+                        .HasMaxLength(100);
 
-                    b.Property<string>("Name");
+                    b.Property<string>("ReceiveUrl");
+
+                    b.Property<string>("StatusUrl");
 
                     b.HasKey("BankId");
 
