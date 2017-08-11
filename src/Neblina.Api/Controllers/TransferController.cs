@@ -8,6 +8,7 @@ using Neblina.Api.Models.TransferViewModels;
 using Neblina.Api.Core.Models;
 using Neblina.Api.Core.Commands;
 using Neblina.Api.Core.Dispatchers;
+using Neblina.Api.Communicators;
 
 namespace Neblina.Api.Controllers
 {
@@ -17,13 +18,15 @@ namespace Neblina.Api.Controllers
         private readonly IUnitOfWork _repos;
         private readonly ITransferDispatcher _dispatcher;
         private readonly ICreditCommand _command;
+        private readonly RegisterBank _registration;
         private int _accountId;
 
-        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command)
+        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command, RegisterBank registration)
         {
             _repos = repos;
             _dispatcher = dispatcher;
             _command = command;
+            _registration = registration;
             _accountId = 1;
         }
 
@@ -44,7 +47,9 @@ namespace Neblina.Api.Controllers
                 Date = DateTime.Now,
                 Description = "Transfer sent",
                 AccountId = _accountId,
-                DestinationBankId = transfer.DestinationBankId,
+                SourceBankId = _registration.BankId,
+                SourceAccountId = _accountId,
+                DestinationBankId = type == TransactionType.SameAccount ? 0 : transfer.DestinationBankId,
                 DestinationAccountId = transfer.DestinationAccountId,
                 Amount = transfer.Amount * -1,
                 Type = type.Value,
