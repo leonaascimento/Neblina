@@ -9,6 +9,7 @@ using Neblina.Api.Core.Models;
 using Neblina.Api.Core.Commands;
 using Neblina.Api.Core.Dispatchers;
 using Neblina.Api.Communicators;
+using Microsoft.Extensions.Logging;
 
 namespace Neblina.Api.Controllers
 {
@@ -19,14 +20,16 @@ namespace Neblina.Api.Controllers
         private readonly ITransferDispatcher _dispatcher;
         private readonly ICreditCommand _command;
         private readonly RegisterBank _registration;
+        private ILogger _logger;
         private int _accountId;
 
-        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command, RegisterBank registration)
+        public TransferController(IUnitOfWork repos, ITransferDispatcher dispatcher, ICreditCommand command, RegisterBank registration, ILogger logger)
         {
             _repos = repos;
             _dispatcher = dispatcher;
             _command = command;
             _registration = registration;
+            _logger = logger;
             _accountId = 1;
         }
 
@@ -69,6 +72,9 @@ namespace Neblina.Api.Controllers
                 Amount = transaction.Amount
             };
 
+            var logdes = transaction.Type == TransactionType.SameAccount ? "at this bank" : $"at bank {transaction.DestinationBankId}";
+            _logger.LogInformation($"Transfer to {bank} bank from account {_accountId} to {transaction.DestinationAccountId} at {logdes}");
+
             return Ok(receipt);
         }
 
@@ -105,6 +111,8 @@ namespace Neblina.Api.Controllers
                 SourceAccountId = transfer.SourceAccountId,
                 Amount = transaction.Amount
             };
+
+            _logger.LogInformation($"Transfer from bank {transaction.SourceBankId} from account {_accountId} to {transaction.DestinationAccountId}");
 
             return Ok(receipt);
         }

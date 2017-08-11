@@ -7,6 +7,7 @@ using Neblina.Binder.Api.Persistence;
 using Neblina.Binder.Api.Core.Models;
 using Neblina.Binder.Api.Core;
 using Neblina.Binder.Api.Core.Services;
+using Microsoft.Extensions.Logging;
 
 namespace Neblina.Binder.Api.Controllers
 {
@@ -15,11 +16,13 @@ namespace Neblina.Binder.Api.Controllers
     {
         private IUnitOfWork _repos;
         private IBankStatusService _bankStatus;
+        private ILogger _logger;
 
-        public BankController(IUnitOfWork repos, IBankStatusService bankStatus)
+        public BankController(IUnitOfWork repos, IBankStatusService bankStatus, ILogger logger)
         {
             _repos = repos;
             _bankStatus = bankStatus;
+            _logger = logger;
         }
 
         // GET banks
@@ -36,6 +39,8 @@ namespace Neblina.Binder.Api.Controllers
         public IActionResult Get(int id)
         {
             var bank = _repos.Banks.Get(id);
+
+            _logger.LogInformation($"Someone asked for bank {id}");
 
             return Ok(bank);
         }
@@ -79,6 +84,8 @@ namespace Neblina.Binder.Api.Controllers
 
             _repos.SaveAndApply();
 
+            _logger.LogInformation($"Bank {bank.Name} is now registered");
+
             return Ok(new { bank.BankId });
         }
 
@@ -93,6 +100,8 @@ namespace Neblina.Binder.Api.Controllers
 
             _repos.Banks.Remove(bank);
             _repos.SaveAndApply();
+
+            _logger.LogInformation($"Bank {bank.Name} is now not registered");
 
             return Ok();
         }
