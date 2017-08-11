@@ -66,13 +66,8 @@ namespace Neblina.Api.Controllers
 
         // POST transfers/receive
         [HttpPost("receive")]
-        public IActionResult Receive(string bank, bool scheduled, [FromBody]ReceiveTransferViewModel transfer)
+        public IActionResult Receive([FromBody]ReceiveTransferViewModel transfer)
         {
-            var type = GetType(bank);
-
-            if (!type.HasValue)
-                return NotFound();
-
             var transaction = new Transaction()
             {
                 Date = DateTime.Now,
@@ -81,7 +76,7 @@ namespace Neblina.Api.Controllers
                 DestinationBankId = transfer.SourceBankId,
                 DestinationAccountId = transfer.SourceAccountId,
                 Amount = transfer.Amount,
-                Type = type.Value,
+                Type = TransactionType.AnotherBankRealTime,
                 Status = TransactionStatus.Pending
             };
 
