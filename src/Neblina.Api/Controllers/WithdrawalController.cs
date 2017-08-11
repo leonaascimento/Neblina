@@ -7,6 +7,7 @@ using Neblina.Api.Models.WithdrawalViewModels;
 using Neblina.Api.Core.Models;
 using Neblina.Api.Core;
 using Neblina.Api.Core.Commands;
+using Microsoft.Extensions.Logging;
 
 namespace Neblina.Api.Controllers
 {
@@ -17,11 +18,14 @@ namespace Neblina.Api.Controllers
         private readonly IDebitCommand _command;
         private int _accountId;
 
-        public WithdrawalController(IUnitOfWork repos, IDebitCommand command)
+        private ILogger _logger;
+
+        public WithdrawalController(IUnitOfWork repos, IDebitCommand command, ILogger<WithdrawalController> logger)
         {
             _repos = repos;
             _command = command;
             _accountId = 1;
+            _logger = logger;
         }
 
         // POST withdrawals
@@ -54,7 +58,9 @@ namespace Neblina.Api.Controllers
 
             var processed = _repos.Transactions.Get(transaction.TransactionId);
             if (processed.Status != TransactionStatus.Successful)
-                return BadRequest(receipt);            
+                return BadRequest(receipt);    
+
+            _logger.LogInformation($"Someone asked for a withdrawal");        
 
             return Ok(receipt);
         }

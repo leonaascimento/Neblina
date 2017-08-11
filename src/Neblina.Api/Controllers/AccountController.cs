@@ -15,9 +15,12 @@ namespace Neblina.Api.Controllers
     {
         private IUnitOfWork _repos;
 
-        public AccountController(IUnitOfWork repos)
+        private ILogger _logger;
+
+        public AccountController(IUnitOfWork repos, ILogger<AccountController> logger)
         {
             _repos = repos;
+            _logger = logger;
         }
 
         // GET accounts
@@ -25,6 +28,7 @@ namespace Neblina.Api.Controllers
         public IActionResult Get()
         {
             var accounts = _repos.Accounts.GetAll();
+            _logger.LogInformation($"Someone asked for all accounts");
 
             return Ok(accounts);
         }
@@ -35,6 +39,7 @@ namespace Neblina.Api.Controllers
         {
             var account = _repos.Accounts.Get(id);
 
+            _logger.LogInformation($"Someone asked for account {id}");
             return Ok(account);
         }
 
@@ -47,6 +52,8 @@ namespace Neblina.Api.Controllers
 
             _repos.Accounts.Add(account);
             _repos.SaveAndApply();
+
+            _logger.LogInformation($"Someone added an Account");
 
             return Ok();
         }
@@ -62,6 +69,8 @@ namespace Neblina.Api.Controllers
 
             _repos.Accounts.Remove(account);
             _repos.SaveAndApply();
+
+            _logger.LogInformation($"Someone deleted account {id}");
 
             return Ok();
         }

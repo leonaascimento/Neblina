@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Neblina.Api.Core;
 using Neblina.Api.Models.StatementViewModels;
 using Neblina.Api.Core.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Neblina.Api.Controllers
 {
@@ -15,10 +16,13 @@ namespace Neblina.Api.Controllers
         private IUnitOfWork _repos;
         private int _accountId;
 
-        public StatementController(IUnitOfWork repos)
+        private ILogger _logger;
+
+        public StatementController(IUnitOfWork repos, ILogger<StatementController> logger)
         {
             _repos = repos;
             _accountId = 1;
+            _logger = logger;
         }
 
         // GET: statement
@@ -50,6 +54,8 @@ namespace Neblina.Api.Controllers
                     Type = transaction.Type,
                     Status = transaction.Status
                 });
+            
+            _logger.LogInformation($"Someone asked for a statement");
 
             return Ok(statement);
         }

@@ -8,6 +8,7 @@ using Neblina.Api.Core.Models;
 using Neblina.Api.Core;
 using Neblina.Api.Core.Commands;
 using Neblina.Api.Core.Dispatchers;
+using Microsoft.Extensions.Logging;
 
 namespace Neblina.Api.Controllers
 {
@@ -18,11 +19,14 @@ namespace Neblina.Api.Controllers
         private readonly IDepositDispatcher _dispatcher;
         private int _accountId;
 
-        public DepositController(IUnitOfWork repos, IDepositDispatcher dispatcher)
+        private ILogger _logger;
+
+        public DepositController(IUnitOfWork repos, IDepositDispatcher dispatcher, ILogger<DepositController> logger)
         {
             _repos = repos;
             _dispatcher = dispatcher;
             _accountId = 1;
+            _logger = logger;
         }
 
         // POST deposits
@@ -41,6 +45,8 @@ namespace Neblina.Api.Controllers
                 Type = TransactionType.SameAccount,
                 Status = TransactionStatus.Authorized,
             };
+            
+            _logger.LogInformation($"Someone asked for a deposit");
 
             _repos.Transactions.Add(transaction);
             _repos.SaveAndApply();
