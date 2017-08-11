@@ -19,13 +19,15 @@ namespace Neblina.Api.Communicators
     {
         private readonly IUnitOfWork _repos;
         private readonly ICreditCommand _creditCommand;
+        private readonly RegisterBank _registration;
         private HttpClient _client;
         private BankCache _cache;
 
-        public TransferCommunicator(HttpClient client, BankCache cache, IUnitOfWork repos, ICreditCommand command)
+        public TransferCommunicator(HttpClient client, BankCache cache, RegisterBank registration, IUnitOfWork repos, ICreditCommand command)
         {
             _repos = repos;
             _creditCommand = command;
+            _registration = registration;
             _client = client;
             _cache = cache;
         }
@@ -76,7 +78,7 @@ namespace Neblina.Api.Communicators
 
                     // TODO: serializar resultado da entry
 
-                    var res = _client.GetAsync($"http://localhost:52203/banks/{bankId}").Result;
+                    var res = _client.GetAsync($"{_registration.BinderAddress}/banks/{bankId}").Result;
                     var stream = res.Content.ReadAsStreamAsync().Result;
                     var serializer = new DataContractJsonSerializer(typeof(BankCacheEntry));
                     entry = (BankCacheEntry)serializer.ReadObject(stream);
@@ -91,7 +93,18 @@ namespace Neblina.Api.Communicators
 
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var response = _client.PostAsync(entry.receiveUrl, new StringContent(JsonConvert.SerializeObject(transaction), Encoding.UTF8, "application/json")).Result;
+
+            var message = new
+            {
+                sourceBankId = transaction.SourceBankId,
+                sourceAccountId = transaction.SourceAccountId,
+                destinationBankId = transaction.DestinationBankId,
+                destinationAccountId = transaction.DestinationAccountId,
+                amount = transaction.Amount * -1
+            };
+
+            var serial = JsonConvert.SerializeObject(message);
+            var response = _client.PostAsync(entry.receiveUrl, new StringContent(serial, Encoding.UTF8, "application/json")).Result;
 
             return response.IsSuccessStatusCode;
         }

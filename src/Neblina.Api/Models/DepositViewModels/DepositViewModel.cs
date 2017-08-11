@@ -8,7 +8,7 @@ namespace Neblina.Api.Models.DepositViewModels
 {
     public class DepositViewModel
     {
-        [Range(0, 1000000)]
+        [Range(0.01, 1000000)]
         public decimal Amount { get; set; }
     }
 }

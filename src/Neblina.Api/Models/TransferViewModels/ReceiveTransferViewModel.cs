@@ -13,7 +13,7 @@ namespace Neblina.Api.Models.TransferViewModels
         public int SourceAccountId { get; set; }
         public int DestinationBankId { get; set; }
         public int DestinationAccountId { get; set; }
-        [Range(0, 1000000)]
+        [Range(0.01, 1000000)]
         public decimal Amount { get; set; }
     }
 }

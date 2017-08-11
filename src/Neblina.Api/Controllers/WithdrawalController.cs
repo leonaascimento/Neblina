@@ -28,6 +28,9 @@ namespace Neblina.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]WithdrawalViewModel withdrawal)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             var transaction = new Transaction()
             {
                 Date = DateTime.Now,

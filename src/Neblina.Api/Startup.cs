@@ -52,11 +52,20 @@ namespace Neblina.Api
             {
                 return new ConnectionFactory() { HostName = "localhost", DispatchConsumersAsync = true };
             });
+            services.AddSingleton<RegisterBank, RegisterBank>(factory =>
+            {
+                return new RegisterBank(
+                    $"{Configuration["BankRegistration:BankId"]}",
+                    $"{Configuration["BankRegistration:BankName"]}",
+                    $"{Configuration["BankRegistration:BankReceiveUrl"]}",
+                    $"{Configuration["BankRegistration:BankStatusUrl"]}",
+                    $"{Configuration["BankRegistration:BinderBaseUrl"] }"
+                    );
+            });
             services.AddSingleton<DepositListener, DepositListener>();
             services.AddSingleton<TransferListener, TransferListener>();
             services.AddSingleton<BankCache, BankCache>();
             services.AddSingleton<HttpClient, HttpClient>();
-            services.AddSingleton<RegisterBank, RegisterBank>();
             services.AddSingleton<ITransferCommunicator, TransferCommunicator>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
             services.AddTransient<ICreditCommand, CreditCommand>();

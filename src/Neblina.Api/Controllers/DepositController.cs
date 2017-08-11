@@ -29,6 +29,9 @@ namespace Neblina.Api.Controllers
         [HttpPost]
         public IActionResult Post([FromBody]DepositViewModel deposit)
         {
+            if (!ModelState.IsValid)
+                return BadRequest();
+
             var transaction = new Transaction()
             {
                 AccountId = _accountId,
