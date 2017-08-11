@@ -27,6 +27,7 @@ namespace Neblina.Api.Persistence.Repositories
 
             if (account != null)
                 account.Transactions = BankingContext.Transactions
+                    .Where(p => p.AccountId == id)
                     .OrderByDescending(p => p.Date)
                     .AsNoTracking()
                     .ToList();
@@ -44,7 +45,7 @@ namespace Neblina.Api.Persistence.Repositories
 
             if (account != null)
                 account.Transactions = BankingContext.Transactions
-                    .Where(p => p.Date >= start)
+                    .Where(p => p.Date >= start && p.AccountId == id)
                     .OrderByDescending(p => p.Date)
                     .AsNoTracking()
                     .ToList();

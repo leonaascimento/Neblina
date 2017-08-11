@@ -23,10 +23,10 @@ namespace Neblina.Api.Communicators
         private HttpClient _client;
         private BankCache _cache;
 
-        public TransferCommunicator(HttpClient client, BankCache cache, RegisterBank registration, IUnitOfWork repos, ICreditCommand command)
+        public TransferCommunicator(HttpClient client, BankCache cache, RegisterBank registration, IUnitOfWork repos, ICreditCommand creditCommand)
         {
             _repos = repos;
-            _creditCommand = command;
+            _creditCommand = creditCommand;
             _registration = registration;
             _client = client;
             _cache = cache;
@@ -40,11 +40,11 @@ namespace Neblina.Api.Communicators
 
             if (transaction.Type == TransactionType.SameBankRealTime)
             {
-                _repos.Transactions.Add(new Transaction()
+                var newTran = new Transaction()
                 {
                     Date = DateTime.Now,
                     Description = "Transfer received from same bank",
-                    AccountId = transaction.AccountId,
+                    AccountId = transaction.DestinationAccountId,
                     SourceBankId = transaction.SourceBankId,
                     SourceAccountId = transaction.SourceAccountId,
                     DestinationBankId = transaction.DestinationBankId,
@@ -52,10 +52,12 @@ namespace Neblina.Api.Communicators
                     Amount = transaction.Amount * -1,
                     Type = TransactionType.SameBankRealTime,
                     Status = TransactionStatus.Successful
-                });
+                };
+
+                _repos.Transactions.Add(newTran);
                 _repos.SaveAndApply();
 
-                next = true;
+                next = _creditCommand.Execute(newTran.TransactionId);
             }
             else
                 next = SendToDestination(transaction.DestinationBankId, transaction);
